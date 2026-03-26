@@ -32,18 +32,19 @@ public class Logs {
 
     }
 
-    private void aumentaDimensione() {
-        this.aumentaDimensione(0);
-    }
-
     public int getSpazioLibero() {
         return this.dati.length - this.count;
     }
 
+    private void aumentaDimensione() {
+        this.aumentaDimensione(0);
+    }
+
+
     private void aumentaDimensione(int nrNuoviElementi) {
         int nuovaDimensione = (int) (this.dati.length * this.incremento) + this.dati.length + nrNuoviElementi;
         Log tmp[] = new Log[nuovaDimensione];
-        for (int i = 0; i < this.dati.length; i++) {
+        for (int i = 0; i < this.count; i++) {
             tmp[i] = this.dati[i];
         }
         this.dati = tmp;
@@ -55,11 +56,12 @@ public class Logs {
             BufferedReader br = new BufferedReader(fr);
             
             int nrRighe = 0;
-            String riga;
 
-            while ((riga = br.readLine()) != null) {
+            while (br.readLine() != null) {
                 nrRighe++;
             }
+
+            br.close();
 
             if(intestazione) {
                 nrRighe--;
@@ -71,8 +73,13 @@ public class Logs {
         }
     }
 
-    public void caricaFile(String fileName, boolean intestazione, String separatore) {
+    public void caricaFile(String fileName, boolean intestazione, String separatore, TipoOperazione tipoOperazione) {
         try {
+            if (tipoOperazione == TipoOperazione.overwrite) {
+                int dimArray = (int)(this.contaRighe(fileName, intestazione) * ( 1 + this.incremento));
+                this.dati = new Log[dimArray];
+                
+            }
             FileReader fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
             String riga;
