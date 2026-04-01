@@ -15,7 +15,6 @@ public class Logs {
 
     public Logs(int nrLogs, double incremento) {
         this.incremento = incremento;
-        this.count = nrLogs;
         this.dati = new Log[nrLogs];
     }
 
@@ -40,7 +39,6 @@ public class Logs {
         this.aumentaDimensione(0);
     }
 
-
     private void aumentaDimensione(int nrNuoviElementi) {
         int nuovaDimensione = (int) (this.dati.length * this.incremento) + this.dati.length + nrNuoviElementi;
         Log tmp[] = new Log[nuovaDimensione];
@@ -54,7 +52,7 @@ public class Logs {
         try {
             FileReader fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
-            
+
             int nrRighe = 0;
 
             while (br.readLine() != null) {
@@ -63,36 +61,61 @@ public class Logs {
 
             br.close();
 
-            if(intestazione) {
+            if (intestazione) {
                 nrRighe--;
             }
             return nrRighe;
-            
+
         } catch (Exception e) {
             return -1;
         }
     }
 
     public void caricaFile(String fileName, boolean intestazione, String separatore, TipoOperazione tipoOperazione) {
-        try {
-            if (tipoOperazione == TipoOperazione.overwrite) {
-                int dimArray = (int)(this.contaRighe(fileName, intestazione) * ( 1 + this.incremento));
-                this.dati = new Log[dimArray];
-                
+        // Creo una copia di dati
+        Log tmp[] = null;
+        if (this.count > 0) {
+            tmp = new Log[this.count];
+            for (int i = 0; i < this.count; i++) {
+                tmp[i] = this.dati[i];
             }
+        }
+        try {
             FileReader fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
+            this.fileName = fileName;
+            this.intestazione = intestazione;
+            this.separatore = separatore;
             String riga;
-            int i = 0;
+            if (tipoOperazione == TipoOperazione.overwrite) {
+                int dimArray = (int) (this.contaRighe(fileName, intestazione) * (1 + this.incremento));
+                this.dati = new Log[dimArray];
+                this.count = 0;
+            }
+            else {                
+                this.aumentaDimensione(this.contaRighe(fileName, intestazione));
+            }
             if (intestazione) {
                 riga = br.readLine();
                 this.headers = riga.split(separatore);
             }
+            this.rawData = new String[this.contaRighe(fileName, intestazione)];
             while ((riga = br.readLine()) != null) {
-                this.dati[i] = new Log(riga, separatore);
+                this.dati[this.count] = new Log(riga, separatore);
+                this.rawData[this.count] = riga;
+                this.count++;
             }
+            br.close();
         } catch (Exception e) {
-            // TODO: handle exception
+            // Ripristinare i vecchi dati
+            
+            if (tmp != null) {
+                this.dati = new Log[(int)(tmp.length * (1+this.incremento))];
+                for (int i = 0; i < tmp.length; i++) {
+                    this.dati[i] = tmp[i];
+                }
+                this.count = tmp.length;
+            }
         }
     }
 }
