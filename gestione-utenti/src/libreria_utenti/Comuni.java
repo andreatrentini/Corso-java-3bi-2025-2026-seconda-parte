@@ -71,6 +71,37 @@ public class Comuni {
         }
     }
 
+    public string getCodiceComune(Comune comune_da_cercare) {
+        for (int i = 0; i < comuni.length; i++) {
+            if (comuni[i].equals(comune_da_cercare)) {
+                return comuni[i].getCodiceComune();
+            }
+        }
+        return null;
+    }
+
+    public string getCodiceComun(String sigla_provincia, String denominazione_ita) {
+        Comune tmp = new Comune(sigla_provincia, denominazione_ita);
+        return getCodiceComune(tmp);
+    }
+
+    public getCodiceComuneBinaria(Comune comune_da_cercare) {
+        int inizio = 0;
+        int fine = comuni.length - 1;
+
+        while (inizio <= fine) {
+            int centro = (inizio + fine) / 2;
+            if (comuni[centro].equals(comune_da_cercare)) {
+                return comuni[centro].getCodiceComune();
+            } else if (comuni[centro].compareTo(comune_da_cercare) < 0) {
+                inizio = centro + 1;
+            } else {
+                fine = centro - 1;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
         String tmp = "";
