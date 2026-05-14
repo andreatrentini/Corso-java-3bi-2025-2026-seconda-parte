@@ -1,6 +1,6 @@
 package libreria_utenti;
 
-public class Comune {
+public class Comune implements Comparable<Comune> {
     private String sigla_provincia;
     private String denominazione_ita;
     private String codice_belfiore;
@@ -57,4 +57,10 @@ public class Comune {
         return this.denominazione_ita.toUpperCase().equals(tmp.denominazione_ita.toUpperCase()) &&
                this.sigla_provincia.toUpperCase().equals(tmp.sigla_provincia.toUpperCase());
     }
+
+    public int compareTo(Comune comune) {
+        return (this.denominazione_ita.toUpperCase()+this.sigla_provincia.toUpperCase())
+            .compareTo(comune.denominazione_ita.toUpperCase()+comune.sigla_provincia.toUpperCase());
+    }
+    
 }

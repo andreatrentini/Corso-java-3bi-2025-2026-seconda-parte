@@ -71,7 +71,7 @@ public class Comuni {
         }
     }
 
-    public string getCodiceComune(Comune comune_da_cercare) {
+    public String getCodiceComune(Comune comune_da_cercare) {
         for (int i = 0; i < comuni.length; i++) {
             if (comuni[i].equals(comune_da_cercare)) {
                 return comuni[i].getCodiceComune();
@@ -80,12 +80,12 @@ public class Comuni {
         return null;
     }
 
-    public string getCodiceComun(String sigla_provincia, String denominazione_ita) {
+    public String getCodiceComune(String sigla_provincia, String denominazione_ita) {
         Comune tmp = new Comune(sigla_provincia, denominazione_ita);
         return getCodiceComune(tmp);
     }
 
-    public getCodiceComuneBinaria(Comune comune_da_cercare) {
+    public String getCodiceComuneBinaria(Comune comune_da_cercare) {
         int inizio = 0;
         int fine = comuni.length - 1;
 
